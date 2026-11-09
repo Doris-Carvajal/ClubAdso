@@ -1,0 +1,75 @@
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>CLUB ADSO</title>
+        <link rel="stylesheet" href="../Assets/css/estilos.css">
+
+    </head>
+    <body>
+        <div class="contenedor-formulario">
+            <h2>Registro de Asociados-Acerias</h2>
+            <form id="formRegistro" action="../Modelos/guardarAsociados.php"  method="POST" >
+                <div class="grupo-input">
+                    <label>Ingresar Documento</label>
+                    <input type="number" id="documento" name="documento" placeholder="ejemplo: 1057000111"> 
+                </div>
+                <div class="grupo-input">
+                    <label>Nombre: </label>
+                    <input type="text" id="nombres" name="nombres" required placeholder="Ingrese nombres completos">
+                </div>
+                <div class="grupo-input">
+                    <label>Apellidos: </label>
+                    <input type="text" id="apellidos" name="apellidos" required placeholder="Ingrese sus apellidos completos">
+                </div>
+                <div class="grupo-input">
+                    <label>Fecha de Nacimiento: </label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                </div>
+                <div class="grupo-input">
+                    <label>Direccion: </label>
+                    <input type="text" id="direccionResidencia" name="direccionResidencia" required placeholder="ejemplo: cra 12 #20-46">
+                </div>
+                <div class="grupo-input">
+                    <label>Ciudad: </label>
+                    <select id="ciudad" name="ciudad" required>
+                        <option value="Sogamoso">Sogamoso</option>
+                        <option value="Duitama">Duitama</option>
+                        <option value="Tunja">Tunja</option>
+                        <option value="Bogota">Bogota</option>
+                    </select>
+                </div>
+                <div class="grupo-input">
+                    <label>Telefono: </label>
+                    <input type="text" id="telefono" name="telefono" required placeholder="ejemplo: 315426897">
+                </div>
+                 <div class="grupo-input">
+                    <label>Email: </label>
+                    <input type="email" id="email" name="email"  required placeholder="ejemplo: camila@gmail.com">
+                </div>
+                <div class="grupo-input">
+                    <label>Genero: </label>
+                    <label>
+                        <input type="radio" id="femenino" name="genero" value="femenino">
+                        <span>FEMENINO</span>
+                    </label>
+                    <label>
+                        <input type="radio" id="masculino" name="genero" value="masculino">
+                        <span>MASCULINO</span>
+                    </label>
+                    <label>
+                        <input type="radio" id="otro" name="genero" value="otro">
+                        <span>OTRO</span>
+                    </label>
+                </div>
+                <div class="grupo-botones">
+                    <button type="submit">Guardar</button>
+                    <button type="reset">Limpiar Formulario</button>
+                </div>
+                
+                <p id="mensajeRegistro" role="status" aria-live="polite"></p>
+            </form>
+
+        </div>
+    </body>
+</html>
+s

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <title>CLUB ACERIAS- Panel Principal </title>
+    <style>
+        .header-mr {
+            background-color: rgb(122, 172, 247);
+            color: white;
+            padding: 20px 30px;
+        }
+
+        .modulo-card {
+            border-top: 4px solid cornflowerblue;
+            border-radius: 10px;
+            transition: 0.2s;
+            cursor: pointer;
+            height: 100%;
+        }
+
+        .modulo-card.asociado {
+            border-top-color: rgb(52, 180, 101);
+        }
+
+        .modulo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .icono-principal {
+            font-size: 45px;
+            color: rgb(105, 154, 245)
+        }
+
+        .icono-personal {
+            font-size: 45px;
+            color: rgb(52, 180, 101)
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <div class="header-mr d-flex justify-content-between aling-items-center">
+        <h3>CLUB ACERIAS - Panel Principal</h3>
+        <div class="text-end">
+            <small id="nombreUsuario"></small>
+            <button class="btn btn-danger btn-sm m-1" onclick=cerrarSesion()>
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </button>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <h5 class="mb-4 fw-bold">Modulos del club de asociados</h5>
+        <div id="tarjetasAdministrador" class="row g-4">
+            <div class="col-md-3">
+                <a href="../Vistas/RegistroAsociados.html" class="text-decoration-none">
+                <div class="card modulo-card shadow-sm p-3">
+                    <i class="bi bi-people icono-principal"></i>
+                    <h4 class="text-primary">Asociados</h4>
+                    <strong>Gestion de asociados</strong>
+                    <p class="small text-muted mt-2">
+                        Administra la información de los asociados, incluyendo sus datos
+                        personales, historial de membresía y estado de cuenta.
+                    </p>
+                </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="../Vistas/RegistroPrestamo.html" class="text-decoration-none">
+                <div class="card modulo-card shadow-sm p-3">
+                    <i class="bi bi-coin icono-principal"></i>
+                    <h4 class="text-primary">Prestamos</h4>
+                    <strong>Gestion de prestamos</strong>
+                    <p class="small text-muted mt-2">
+                        Formulario para la aprobación y simulación de nuevos créditos del club.
+                    </p>
+                </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <a href="../Vistas/RegistroActividades.html" class="text-decoration-none">
+                    <div class="card modulo-card shadow-sm p-3">
+                        <i class="bi bi-person-walking icono-principal"></i>
+                        <h4 class="text-primary">Actividades</h4>
+                        <strong>Registro de actividades</strong>
+                        <p class="small text-muted mt-2">
+                            Controlar eventos pro-fondos y registrar los dineros recaudados.
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-3">
+                <div class="card modulo-card shadow-sm p-3">
+                    <i class="bi bi-bar-chart-line-fill icono-principal"></i>
+                    <h4 class="text-primary">Reportes</h4>
+                    <strong>Consultas y Saldos</strong>
+                    <p class="small text-muted mt-2">
+                        Ver los reportes generales del club.
+                </div>
+            </div>
+        </div>
+
+        <div id="tarjetasAsociado" class="row g-4 d-none">
+            <div class="col-md-3">
+                <div class="card modulo-card asociado shadow-sm p-3">
+                    <i class="bi bi-person-vcard icono-personal"></i>
+                    <h4 class="text-success mt-2">Mi perfil</h4>
+                    <p class="small text-muted">Ver mis datos y préstamos.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <a href="../Vistas/RegistroPago.html" class="text-decoration-none">
+                    <div class="card modulo-card asociado shadow-sm p-3">
+                        <i class="bi bi-person-fill icono-personal"></i>
+                        <h4 class="text-success mt-2">Mis Pagos</h4>
+                        <p class="small text-muted">Ver los abonos de mis préstamos.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../Controladores/dashboard.js"></script>
+
+</html>

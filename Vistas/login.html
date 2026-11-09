@@ -1,0 +1,30 @@
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>CLUB ADSO</title>
+        <link rel="stylesheet" href="../Assets/css/estilos.css">
+
+    </head>
+    <body>
+        <div>
+            <h2>Inicio Sesión Asociados-Acerias</h2>
+            <form id="formLogin" action=""  method="POST" >      
+                <div class="grupo-input">
+                    <label>Usuario: </label>
+                    <input type="text" id="usuario" name="usuario" required placeholder="ejemplo: camila455">
+                </div>
+                <div class="grupo-input">
+                    <label>Contraseña: </label>
+                    <input type="password" id="contraseña" name="contraseña" required placeholder="ejemplo: 1245">
+                </div>
+                <div class="grupo-botones">
+                    <button type="submit">Iniciar Sesion</button>
+                </div>
+                <div class="registro">
+                    <p>¿No tienes una cuenta?<a href="registro.html"> Regístrate aquí</a></p>
+                </div>
+            </form>
+        </div>
+    </body>
+    <script src="../Controladores/login.js"></script>
+</html>

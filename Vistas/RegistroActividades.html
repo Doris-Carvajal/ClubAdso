@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLUB ADSO - Registro de Actividades</title>
+    <style>
+        body {
+            background-color: rgb(250, 237, 249);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            color: rgb(237, 114, 200);
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid rgb(243, 161, 229);
+            padding-bottom: 10px;
+        }
+
+        .grupo-input {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .grupo-input label {
+            font-weight: bold;
+            font-size: 14px;
+            color: #0f0e0e;
+            margin-bottom: 5px;
+        }
+
+        .grupo-botones {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        input,
+        select,
+        textarea {
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .contenedor-formulario {
+            background-color: rgb(255, 209, 248);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        button[type="submit"] {
+            background-color: rgb(236, 117, 220);
+            color: white;
+        }
+        button[type="reset"] {
+            background-color: #cbd5e1;
+            color: #151515;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contenedor-formulario">
+        <h2>Registro de Actividades</h2>
+        <form id="formActividades" action="" method="POST">
+            
+            <div class="grupo-input">
+                <label>Nueva Actividad:</label>
+                <input type="text" id="actividad" placeholder="ejemplo: Torneo de Tenis" required>
+            </div>
+
+            <div class="grupo-input">
+                <label>Descripción:</label>
+                <input type="text" id="Descripcion" placeholder="Ingrese la descripcion de la actividad que deseas registrar">
+            </div>
+
+            <div class="grupo-input">
+                <label>Fecha de la actividad:</label>
+                <input type="date" id="fechaActividad" required>
+            </div>
+
+            <div class="grupo-input">
+                <label>Hora de la actividad:</label>
+                <input type="time" id="horaActividad" required>
+            </div>
+
+            <div class="grupo-input">
+                <label>Costo de la actividad:</label>
+                <input type="number" id="recaudoActividad" placeholder="Ej: 50000">
+            </div>
+
+            <div class="grupo-botones">
+                <button type="submit">Guardar</button>
+                <button type="reset">Cancelar</button>
+                <button type="reset">Limpiar</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
