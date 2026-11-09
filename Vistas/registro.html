@@ -8,10 +8,10 @@
     <body>
         <div class="contenedor-formulario">
             <h2>Registro de Asociados-Acerias</h2>
-            <form id="formRegistro" action="../Modelos/guardarAsociados.php"  method="POST" >
+            <form id="formRegistro" action="../Modelos/guardarAsociado.php" method="POST">
                 <div class="grupo-input">
                     <label>Ingresar Documento</label>
-                    <input type="number" id="documento" name="documento" placeholder="ejemplo: 1057000111"> 
+                    <input type="number" id="documento" name="documento" required placeholder="ejemplo: 1057000111">
                 </div>
                 <div class="grupo-input">
                     <label>Nombre: </label>
@@ -49,7 +49,7 @@
                 <div class="grupo-input">
                     <label>Genero: </label>
                     <label>
-                        <input type="radio" id="femenino" name="genero" value="femenino">
+                        <input type="radio" id="femenino" name="genero" value="femenino" required>
                         <span>FEMENINO</span>
                     </label>
                     <label>
@@ -70,6 +70,6 @@
             </form>
 
         </div>
+        <script src="../Controladores/Asociado.js"></script>
     </body>
 </html>
-s

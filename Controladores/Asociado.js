@@ -10,15 +10,12 @@ formulario.addEventListener("submit", async function (event) {
     const asociado = Object.fromEntries(new FormData(formulario).entries());
 
     botonGuardar.disabled = true; //Desabilitar el bóton mientras se procesa la solicitud.
-    document.getElementById("mensajeRegistro").textContent = "Guardando...";
-
-    document.getElementById("mensajeRegistro").dataset.tipo = "";
     try {
         const respuesta = await fetch(formulario.action, {
                 method: 'POST',
-                 headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(asociado)
-            });
+            })
 
         //pasar la respuesta json a un objeto de JavaScript 
         const resultado = await respuesta.json();

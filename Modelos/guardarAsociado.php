@@ -16,7 +16,7 @@ try{
     $datos = json_decode($json, true);
 
     
-    if(!is_ array($datos) || json_last_error() !== JSON_ERROR_NONE) {
+    if(!is_array($datos) || json_last_error() !== JSON_ERROR_NONE) {
         http_response_code(400);
         throw new Exception("Datos inválidos.");
     }
