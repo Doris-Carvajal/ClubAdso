@@ -1,7 +1,6 @@
 <?php
-require_once __DIR__ . '/../Config/conexion.php';
-
-
+  require_once __DIR__ . '/../Config/conexion.php';
+ 
 class Asociado
 {    
      private $documento;
@@ -32,12 +31,15 @@ class Asociado
 
         $conexionDB = new Conexion();
         $this->conexion = $conexionDB-> conectar();
-    }
+    }   
 
     public function guardar()
     {
-        $sql = "INSERT INTO asociados (documento, nombres, apellidos, fechaNacimiento, genero, direccionResidencia, ciudad, telefono, email, Contraseña) VALUES (:documento, :nombres, :apellidos, :fechaNacimiento, :genero, :direccionResidencia, :ciudad, :telefono, :email, :Contraseña)";
-        $consulta= $this->conexion->prepare ($sql);
+        $sql = "INSERT INTO asociados (documento, nombres, apellidos, fechaNacimiento, genero, direccionResidencia, ciudad, telefono, email, contraseña)
+                VALUES (:documento, :nombres, :apellidos, :fechaNacimiento, :genero, :direccionResidencia, :ciudad, :telefono, :email, :contrasena)";
+
+        $consulta = $this->conexion->prepare($sql);
+
         return $consulta->execute([
             ":documento" => $this->documento,
             ":nombres" => $this->nombres,
@@ -48,7 +50,7 @@ class Asociado
             ":ciudad" => $this->ciudad,
             ":telefono" => $this->telefono,
             ":email" => $this->email,
-            ":Contraseña" => $this->contraseña
+            ":contrasena" => $this->contraseña
         ]);
     }
 }

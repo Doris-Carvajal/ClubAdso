@@ -2,6 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/../Modelos/Asociado.php';
 
+
 try{
     if($_SERVER['REQUEST_METHOD']!== 'POST'){
         http_response_code(405);
@@ -9,6 +10,7 @@ try{
         //Saltar a cathch y mostrar el mensaje de error 
         throw new Exception("Método HTTP no permitido.");
     }
+    
     //Leer el contenido JSON de la solicitud enviada por fetch
     $json = file_get_contents('php://input');
     
@@ -45,7 +47,7 @@ try{
         http_response_code(500);
         echo json_encode(["success" => false, "mensaje" => "Error al guardar al asociado."]);
     }
-}catch(PDOException $e){
+}catch(PDOException $e){//
     if($e->getCode()==23000){// Código de error para violación de clave única
         http_response_code (409);// Conflicto  
         echo json_encode(["success" => false, "mensaje" => "El documento ya está registrado."]);

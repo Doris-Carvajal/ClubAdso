@@ -8,10 +8,10 @@
     <body>
         <div>
             <h2>Inicio Sesión Asociados-Acerias</h2>
-            <form id="formLogin" action=""  method="POST" >      
+            <form id="formLogin" action="../Modelos/iniciarSesion.php" method="POST">
                 <div class="grupo-input">
-                    <label>Usuario: </label>
-                    <input type="text" id="usuario" name="usuario" required placeholder="ejemplo: camila455">
+                    <label>Correo electrónico: </label>
+                    <input type="email" id="email" name="email" required placeholder="ejemplo: camila@gmail.com">
                 </div>
                 <div class="grupo-input">
                     <label>Contraseña: </label>
@@ -21,8 +21,10 @@
                     <button type="submit">Iniciar Sesion</button>
                 </div>
                 <div class="registro">
-                    <p>¿No tienes una cuenta?<a href="registro.html"> Regístrate aquí</a></p>
+                    <p>¿No tienes una cuenta?
+                        <a href="registro.html"> Regístrate aquí</a></p>
                 </div>
+                <p id="mensajeLogin" class="text-danger mt-3 mb-0" role="alert"></p>
             </form>
         </div>
     </body>

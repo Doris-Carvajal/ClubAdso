@@ -1,23 +1,36 @@
-const usuarios = [
-    { usuario: 'admin@gmail.com', clave: '123', rol: 'admin', nombre: 'Admin MR' },
-    { usuario: 'pepito@gmail.com', clave: '456', rol: 'asociado', nombre: 'Jaun Perez' }
-];
-
-document.getElementById('formLogin').addEventListener('submit', function (e) {
+const formulario = document.getElementById('formLogin');
+formulario.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const usuarioInput = document.getElementById('usuario').value;
-    const claveInput = document.getElementById('contraseña').value;
-    const usuarioEncontrado = usuarios.find
-        (u => u.usuario === usuarioInput && u.clave === claveInput
-    );
+    const boton = formulario.querySelector('button[type="submit"]');
+    const mensaje = document.getElementById("mensajeLogin");
 
-    if (usuarioEncontrado){
+    boton.disabled = true;
+
+    try {
+        const respuesta = await fetch(formulario.action, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(Object.fromEntries(new FormData(formulario).entries())),
+        });
+
+        const resultado = await respuesta.json();
+
+        if (!resultado.success) {
+            mensaje.textContent =
+                "No fue posible iniciar sesión. Revisa los datos e inténtalo de nuevo.";
+            return;
+        }
         localStorage.setItem('logueado', 'true');
-        localStorage.setItem('rol', usuarioEncontrado.rol);
-        localStorage.setItem('nombre', usuarioEncontrado.nombre);
+        localStorage.setItem('rol', resultado.rol);
+        localStorage.setItem('nombre', resultado.nombre);
+
         window.location.href = 'dashboard.html';
-    }else{
-        alert('Usuario o contraseña incorrectos');
+    }catch(error) {
+        console.error("Error al iniciar sesion:", error);
+        mensaje.textContent =
+            "Ocurrió un error al intentar iniciar sesión. Por favor, inténtalo de nuevo más tarde.";
+    }finally{
+        boton.disabled = false;
     }
 });
