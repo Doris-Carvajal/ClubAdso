@@ -7,6 +7,7 @@ header("Content-Type: application/json; charset=utf-8");
 try{
     if($_SERVER['REQUEST_METHOD']!== 'POST'){
         http_response_code(405);
+        //Saltar a catch y mostrar el mensaje de error
         throw new Exception("Método HTTP no permitido.");
     }
 
@@ -29,10 +30,7 @@ try{
     $conexion = (new Conexion())->conectar();
 
     $consulta = $conexion->prepare(
-        "SELECT documento, nombres, apellidos, contraseña, rol
-         FROM asociados
-         WHERE email = :email"
-    );
+        "SELECT * FROM asociados WHERE email = :email");
     $consulta->execute([':email' => $email]);
     $asociado =$consulta->fetch();
 
