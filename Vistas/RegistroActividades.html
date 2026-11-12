@@ -5,15 +5,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLUB ADSO - Registro de Actividades</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
         body {
             background-color: rgb(250, 237, 249);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+        }
+
+        .header-mr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 16px 0;
+        }
+
+        main.container {
+            width: min(100%, 1100px);
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead th {
+            background-color: #f0a1ec;
+            color: white;
         }
 
         h2 {
@@ -63,6 +89,7 @@
             font-size: 14px;
             font-family: inherit;
         }
+
         .contenedor-formulario {
             background-color: rgb(255, 209, 248);
             padding: 30px;
@@ -70,12 +97,14 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 500px;
+            margin: 20px auto 0;
         }
 
         button[type="submit"] {
             background-color: rgb(236, 117, 220);
             color: white;
         }
+
         button[type="reset"] {
             background-color: #cbd5e1;
             color: #151515;
@@ -83,34 +112,82 @@
     </style>
 </head>
 
-<body>
-    <div class="contenedor-formulario">
+<body class="bg-light">
+    <header class="header-mr d-flex justify-content-between aling-items-center gap-3">
+        <h1 class="h3 mb-0">Actividades del club</h1>
+        <a class="btn btn-outline-light" href="../Vistas/dashboard.html">
+            <i class="bi bi-arroe-left"></i>
+            Volver al panel
+        </a>
+    </header>
+
+    <main class="container py-4">
+        <div class="d-flex  flex-colum  flex-md-row  justify-content-between align-items-md-center  gap-3 mb-3">
+            <p class="mb-0 text-muted">
+                Consulta las actividades programadas y su información.
+            </p>
+            <a href="#formActividades">
+                <button id="nuevaActividad" class="btn btn-success btn-sm" type="button"
+                    onclick="window.location.hash = 'formActividades'">
+                    <i class="bi bi-plus-lg"></i>
+                    Nueva actividad
+                </button>
+            </a>
+
+        </div>
+        <div class="card shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">Actividad</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Municipio</th>
+                            <th scope="col">Total recaudado</th>
+                            <th id="encabezadoAcciones" class="d-none" scope="col">
+                                Acciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaActividades">
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                Cargando actividades...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <div id="contenedorFormulario" class="contenedor-formulario">
         <h2>Registro de Actividades</h2>
         <form id="formActividades" action="" method="POST">
-            
+
             <div class="grupo-input">
                 <label>Nueva Actividad:</label>
-                <input type="text" id="actividad" placeholder="ejemplo: Torneo de Tenis" required>
+                <input type="text" id="Actividad" name="actividad" placeholder="ejemplo: Torneo de Tenis" required>
             </div>
 
             <div class="grupo-input">
                 <label>Descripción:</label>
-                <input type="text" id="Descripcion" placeholder="Ingrese la descripcion de la actividad que deseas registrar">
+                <input type="text" id="Descripcion" name="descripcion"
+                    placeholder="Ingrese la descripcion de la actividad que deseas registrar">
             </div>
 
             <div class="grupo-input">
                 <label>Fecha de la actividad:</label>
-                <input type="date" id="fechaActividad" required>
+                <input type="date" id="fechaActividad" name="fechaActividad" required>
             </div>
 
             <div class="grupo-input">
                 <label>Hora de la actividad:</label>
-                <input type="time" id="horaActividad" required>
+                <input type="time" id="horaActividad" name="horaActividad" required>
             </div>
 
             <div class="grupo-input">
-                <label>Costo de la actividad:</label>
-                <input type="number" id="recaudoActividad" placeholder="Ej: 50000">
+                <label>Total recaudado:</label>
+                <input type="number" id="totalRecaudo" name="totalRecaudo" placeholder="Ej: 50000">
             </div>
 
             <div class="grupo-botones">
@@ -120,6 +197,7 @@
             </div>
         </form>
     </div>
+    <script src="../Controladores/Actividades.js"></script>
 </body>
 
 </html>
