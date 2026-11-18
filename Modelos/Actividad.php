@@ -44,7 +44,7 @@ class Actividad{
         $sql = "UPDATE actividades SET nombreActividad = :nombreActividad, fechaEvento = :fechaEvento, municipio = :municipio, totalRecaudado = :totalRecaudado WHERE idActividad = idActividad";
         $consulta= $this->conexion->prepare($sql);
         return $consulta->execute([
-             ":nombreActividad" => $datos['nombreActividad'],
+            ":nombreActividad" => $datos['nombreActividad'],
             ":fechaEvento" => $datos ['fechaEvento'],
             ":municipio" => $datos['municipio']
             ":totalRecaudado" => $datos ['totalRecaudado'],

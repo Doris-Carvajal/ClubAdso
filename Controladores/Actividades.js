@@ -70,7 +70,7 @@ function mostrarActividades() {
             const botonEditar = document.createElement("button");
             botonEditar.type = "button";
             botonEditar.className = "btn btn-sm btn-outline-primary me-2";
-            botonEditar.ineerHTML = '<i class="bi bi-pencil-square"></i>';
+            botonEditar.innerHTML = '<i class="bi bi-pencil-square"></i>';
             botonEditar.addEventListener("click", () => abrirEdicion(actividad));
 
 
