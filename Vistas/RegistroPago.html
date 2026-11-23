@@ -4,128 +4,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLUB ADSO - Registro de Pagos</title>
+    <title>CLUB ADSO - Gestión de Pagos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
         body {
             background-color: rgb(250, 241, 249);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            margin: 0;
             font-family: Arial, sans-serif;
+        }
+
+        .header-mr {
+            background-color: rgb(255, 209, 248);
+            color: #ffffff;
+            padding: 16px 24px;
+
+        }
+
+        .header-mr {
+            background-color: #f0b0ed;
+            color: rgb(241, 237, 241);
+            font-weight: bold;
         }
 
         h2 {
             color: rgb(237, 114, 200);
-            margin-bottom: 20px;
-            text-align: center;
             border-bottom: 2px solid rgb(243, 161, 229);
             padding-bottom: 10px;
         }
 
-        .grupo-input {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .grupo-input label {
-            font-weight: bold;
-            font-size: 14px;
-            color: #0f0e0e;
-            margin-bottom: 5px;
-        }
-
-        .grupo-botones {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-        }
-
-        button {
-            flex: 1;
-            padding: 12px 8px;
-            border: none;
-            border-radius: 5px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        input,
-        select,
-        textarea {
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-        .contenedor-formulario {
-            background-color: rgb(255, 209, 248);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-        }
-
-        button[type="submit"] {
+        .btn-rosa {
             background-color: rgb(236, 117, 220);
             color: white;
+            font-weight: bold;
+            border: none;
         }
-        button[type="reset"] {
-            background-color: #cbd5e1;
-            color: #151515;
+
+        .btn-rosa:hover {
+            background-color: rgb(220, 95, 204);
+            color: white;
+        }
+
+        .tabla-rosa thead {
+            background-color: rgb(237, 114, 200);
+            color: white;
+        }
+
+        .modal-content {
+            background-color: rgb(250, 241, 249);
+            border-radius: 8px;
+        }
+
+        .modal-header {
+            background-color: rgb(255, 209, 248);
+            border-bottom: 2px solid rgb(243, 161, 229);
+        }
+
+        .modal-title {
+            color: rgb(237, 114, 200);
+            font-weight: bold;
+        }
+        .table thead th {
+            background-color: #f0a1ec;
+            color: white;
         }
     </style>
 </head>
 
 <body>
-    <div class="contenedor-formulario">
-        <h2>Registro de Pagos</h2>
-        <form id="formPagos" action="" method="POST">
-           <div class="grupo-input">
-                <label>Seleccionar Pago: </label>
-                <select id="SeleccionPago" required>
-                    <option value="Prestamo">Prestamo</option>
-                    <option value="Actividades">Actividades</option>
-                </select>
-            </div>
-            <div class="grupo-input">
-                <label>Monto a pagar</label>
-                <input type="number" id="montoPago" placeholder="Ejemplo:$50.000">
+    <header class="header-mr d-flex justify-content-between align-items-center gap-3">
+        <h1 class="h3 mb-0">Gestión de pagos del club</h1>
+        <a class="btn btn-outline-dark" href="../Vistas/dashboard.html">
+            <i class="bi bi-arrow-left"></i>
+            Volver al panel
+        </a>
+    </header>
+
+    <main class="container py-4">
+        <div class="contenedor-pagos">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+                <p class="mb-0 text-dark">
+                    Consulta los pagos y su información.
+                </p>
+                <button id="nuevaPago" class="btn btn-rosa d-none" type="button" data-bs-toggle="modal" data-bs-target="#modalPagos">
+                    <i class="bi bi-plus-lg"></i>
+                    Nuevo Pago
+                </button>
             </div>
 
-            <div class="grupo-input">
-                <label>Fecha de Pago:</label>
-                <input type="date" id="fechaPago" required>
+            <div class="card shadow-sm">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0 tabla-rosa">
+                        <thead>
+                            <tr>
+                                <th scope="col">idPago</th>
+                                <th scope="col">idPrestamo</th>
+                                <th scope="col">valorCuota</th>
+                                <th scope="col">fechaPago</th>
+                                <th id="encabezadoAcciones" class="d-none" scope="col">
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaPagos">
+                            <tr>
+                                <td colspan="5" class="text-center py-4">
+                                    Cargando Pagos....
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+        </div>
+    </main>
 
-            <div class="grupo-input">
-                <label>Metodo de Pago </label>
-                <select id="MetodoPago" required>
-                    <option value="Nequi">Nequi</option>
-                    <option value="Daviplata">Daviplata</option>
-                    <option value="Bancolombia">Bancolombia</option>
-                    <option value="Efectivo">Efectivo</option>
-                </select>
-            </div>
+    <div class="modal fade" id="modalPagos" tabindex="-1" aria-labelledby="tituloModalPagos" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formPagos" action="" method="POST">
 
-            <div class="grupo-input">
-                <label>Número de Comprobante</label>
-                <input type="text" id="numeroComprobante" placeholder="Ej:TR-984210">
-            </div>
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="tituloModalPagos">Nuevo Pago</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
 
-            <div class="grupo-botones">
-                <button type="submit">Guardar</button>
-                <button type="reset">Cancelar</button>
-                <button type="reset">Limpiar</button>
+                    <div class="modal-body">
+                        <input type="hidden" id="idPago" name="idPago" />
+
+                        <div class="mb-3">
+                            <label for="idPrestamo" class="form-label fw-bold">ID Préstamo:</label>
+                            <input type="number" class="form-control" id="idPrestamo" name="idPrestamo" min="1" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="valorCuota" class="form-label fw-bold">Valor de la cuota:</label>
+                            <input type="number" class="form-control" id="valorCuota" name="valorCuota" min="1" step="0.01" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="fechaPago" class="form-label fw-bold">Fecha del pago:</label>
+                            <input type="date" class="form-control" id="fechaPago" name="fechaPago" required />
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="reset" class="btn btn-outline-secondary" id="limpiarFormulario">Limpiar</button>
+                        <button id="guardarPago" type="submit" class="btn btn-rosa">Guardar</button>
+                    </div>
+
+                </form>
             </div>
-        </form>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../Controladores/Pagos.js"></script>
 </body>
 
 </html>
