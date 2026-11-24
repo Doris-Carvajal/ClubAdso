@@ -15,10 +15,13 @@ function leerDatos() {
 
 function validarPago($datos){
 
+    $idPrestamo = $datos['idPrestamo'] ?? null;
     $valorCuota = $datos['valorCuota'] ?? null;
     $fechaPago = $datos['fechaPago'] ?? null;
 
-    if(!is_numeric($valorCuota) || (float)$valorCuota <= 0 || !is_string($fechaPago) || trim($fechaPago) === "" || !filter_var($idPrestamo, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]])) {
+    $idPrestamoValido = filter_var($idPrestamo, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
+
+    if(!is_numeric($valorCuota) || float $valorCuota <= 0 || !is_string($fechaPago) || trim($fechaPago) === "" || $idPrestamoValido === false) {
         http_response_code(400);
         throw new Exception("Ingresa un valor de cuota, fecha de pago y préstamo válidos");
     }
@@ -55,7 +58,7 @@ try{
         throw new Exception("No tienes permisos para realizar esta acción");
     }
 
-    require_once __DIR__ . "/PagoCuota.php";
+    require_once __DIR__ . "/pagos.php";
     $pagoCuota = new PagoCuota();
 
     switch($metodo){

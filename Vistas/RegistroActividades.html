@@ -11,13 +11,13 @@
 
     <style>
         body {
-            background-color: rgb(250, 237, 249);
+            background-color: rgb(252, 252, 252);
             margin: 0;
             font-family: Arial, sans-serif;
         }
 
         .header-mr {
-            background-color: #f0b0ed;
+            background-color: rgb(122, 172, 247);
             color: #ffffff;
             padding: 20px 30px ;
         }
@@ -29,15 +29,15 @@
         }
 
         .table thead th {
-            background-color: #f0a1ec;
+            background-color: #acccf0;
             color: white;
         }
 
         h2 {
-            color: rgb(237, 114, 200);
+            color: rgb(189, 208, 243);
             margin-bottom: 20px;
             text-align: center;
-            border-bottom: 2px solid rgb(243, 161, 229);
+            border-bottom: 2px solid rgb(180, 207, 243);
             padding-bottom: 10px;
         }
 
@@ -117,7 +117,8 @@
             <p class="mb-0 text-muted">
                 Consulta las actividades programadas y su información.
             </p>
-            <button id="nuevaActividad" class="btn btn-success d-none" type="button">
+            <button id="nuevaActividad" class="btn btn-success d-none" type="button"
+                data-bs-toggle="modal" data-bs-target="#modalActividad">
                 <i class="bi bi-plus-lg"> </i>
                 Nueva actividad
             </button>
@@ -151,7 +152,7 @@
 <div class="modal fade" id="modalActividad" tabindex="-1" aria-labelledby="tituloModalActividad" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="formActividad" action="" method="POST">
+            <form id="formActividad" action="../Modelos/gestionarActividades.php" method="POST">
 
                 <div class="modal-header">
                     <h2 class="modal-title " id="tituloModalActividad">Nueva actividad</h2>
@@ -178,7 +179,7 @@
                     </div>
 
                     <div id="campoTotalRecaudado" class="mb-3 d-none">
-                        <label for="totalRecaudado" class="form-label">Total recaudado (opcional; completar al finalizar):</label>
+                        <label for="totalRecaudado" class="form-label">Total recaudado</label>
                         <input type="number" class="form-control" id="totalRecaudado" name="totalRecaudado" 
                                min="0" step="0.01"  />
                     </div>

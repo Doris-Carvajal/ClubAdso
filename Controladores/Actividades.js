@@ -21,7 +21,8 @@ async function solicitarApi(metodo, datos) {
     const respuesta = await fetch("../Modelos/gestionarActividades.php", opciones);
     const resultado = await respuesta.json();
     if (respuesta.status === 401) {
-        window.location.href = "../Vista/login.html";
+        window.location.href = "../Vistas/login.html";
+        return;
     }
     if (!respuesta.ok) {
         throw new Error(resultado.message || resultado.mensaje || "Error en la solicitud");
@@ -166,7 +167,7 @@ formularioActividad.addEventListener("submit", async(evento)=>{
         alert("actualizada correctamente");
         cargarActividades();
     }catch (error){
-        alert(error.mesagge);
+        alert(error.message);
     }
 });
 

@@ -45,7 +45,7 @@ async function cargarPagos(){
         if (pagos.length == 0){
             const fila = document.createElement("tr");
             const celda = document.createElement("td");
-            celda.colSpan = esAdministrador ? 4 : 3;
+            celda.colSpan = esAdministrador ? 5 : 4;
             celda.className = "text-center py-4 text-muted";
             celda.textContent = "No hay pagos registrados";
             fila.append(celda);
@@ -56,11 +56,11 @@ async function cargarPagos(){
         pagos.forEach((pago)=>{
             const fila = document.createElement("tr");
             fila.append(
-                crearCelda(pago.idPrestamo),
                 crearCelda(pago.valorCuota === null? "Pendiente": Number(pago.valorCuota).toLocaleString("es-CO",{
                     style: "currency",
                     currency: "COP"}
                 )),
+                crearCelda(pago.fechaPago),
             );
         if(esAdministrador){
             const acciones = document.createElement("td");
@@ -69,7 +69,7 @@ async function cargarPagos(){
             const botonEditar = document.createElement("button");
             botonEditar.type = "button";
             botonEditar.className = "btn btn-sm btn-outline-primary me-2";
-            botonEditar.innerHTML = '<i class="bi bi-trash"></i>';
+            botonEditar.innerHTML = '<i class="bi bi-pencil-square"></i>';
             botonEditar.addEventListener("click", () => abrirEdicion(pago));
 
             const botonEliminar = document.createElement("button");
@@ -94,7 +94,7 @@ async function cargarPagos(){
 }
 
 async function eliminarPago(pago){
-    const confirmar = window.confirm(`¿Deseas eliminar el pago del préstamo #${pago.idPrestamo}?`);
+    const confirmar = window.confirm(`¿Deseas eliminar el pago del préstamo #${pago.idPago}?`);
 
     if(!confirmar){
         return 
@@ -119,6 +119,14 @@ function configurarAcciones(){
     if(esAdministrador){
         if(botonNuevo) botonNuevo.classList.remove("d-none");
         if(encabezadoAcciones) encabezadoAcciones.classList.remove("d-none");
+        if(botonNuevo) {
+            botonNuevo.addEventListener("click", () => {
+                formularioPago.reset();
+                document.getElementById("idPrestamo").value = "1";
+                document.getElementById("tituloModalPagos").textContent = "Nuevo Pago";
+                document.getElementById("guardarPago").textContent = "Guardar";
+            });
+        }
         accionesConfiguradas = true;
     }
 }
@@ -142,7 +150,7 @@ formularioPago.addEventListener("submit", async (evento)=>{
     const idPago = document.getElementById("idPago").value;
 
     const datos={
-        idPrestamo: document.getElementById("idPrestamo").value,
+        idPrestamo: Number(document.getElementById("idPrestamo").value),
         valorCuota: document.getElementById("valorCuota").value,
         fechaPago: document.getElementById("fechaPago").value
     };
@@ -160,3 +168,4 @@ formularioPago.addEventListener("submit", async (evento)=>{
     }
 });
 
+cargarPagos();
