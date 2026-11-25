@@ -30,6 +30,18 @@ function validarActividad($datos){
     ];
 }
 
+function validarTotalRecaudado($total){
+    if ($total === null || $total === "") {
+        return 0;
+    }
+    if (!is_numeric($total) || (float)$total < 0) {
+        http_response_code(400);
+        throw new Exception("Ingresa un total recaudado válido.");
+    }
+    return (float)$total;
+}
+
+
 function validarId($id){
     $idActividad=filter_var($id,FILTER_VALIDATE_INT,["options" =>["min_range" => 1]]);
     if ($idActividad === false){
@@ -70,6 +82,7 @@ try{
             break;
         case "POST":
             $datos = validarActividad(leerDatos());
+            $datos["totalRecaudado"] = 0;
             $actividad->guardar($datos);
             $resultado = [
                 "success" => true,
@@ -81,6 +94,7 @@ try{
             $datos=leerDatos();
             $datos["idActividad"]=validarId($datos["idActividad"] ?? null);
             $datos = array_merge($datos,validarActividad($datos));
+            $datos["totalRecaudado"] = validarTotalRecaudado($datos["totalRecaudado"] ?? null);
             
             if(!$actividad->editar($datos)){
                 http_response_code(404);

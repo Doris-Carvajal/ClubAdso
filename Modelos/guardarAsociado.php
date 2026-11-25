@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/../Modelos/Asociado.php';
 
@@ -34,6 +36,10 @@ try{
     if(!filter_var($datos['email'], FILTER_VALIDATE_EMAIL)){
         http_response_code(400);
         throw new Exception("Email inválido.");
+    }
+
+    if (!isset($_SESSION["rol"]) || $_SESSION["rol"] !== "admin") {
+        $datos["rol"] = "Asociado";
     }
 
     $asociado=new Asociado ($datos);

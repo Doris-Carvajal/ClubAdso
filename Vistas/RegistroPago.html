@@ -116,7 +116,7 @@
                 <p class="mb-0 text-dark">
                     Consulta los pagos y su información.
                 </p>
-                <button id="nuevaPago" class="btn btn-success d-none" type="button" data-bs-toggle="modal" data-bs-target="#modalPagos">
+                <button id="nuevaPago" class="btn btn-success d-none" type="button">
                     <i class="bi bi-plus-lg"></i>
                     Nuevo Pago
                 </button>
@@ -160,7 +160,12 @@
                     <div class="modal-body">
                         <input type="hidden" id="idPago" name="idPago" />
 
-                        <input type="hidden" id="idPrestamo" name="idPrestamo" value="1" />
+                        <div class="mb-3">
+                            <label for="idPrestamo" class="form-label fw-bold">Préstamo:</label>
+                            <select class="form-select" id="idPrestamo" name="idPrestamo" required>
+                                <option value="">Selecciona un préstamo</option>
+                            </select>
+                        </div>
 
                         <div class="mb-3">
                             <label for="valorCuota" class="form-label fw-bold">Valor de la cuota:</label>

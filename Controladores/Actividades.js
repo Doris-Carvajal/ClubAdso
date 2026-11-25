@@ -19,12 +19,19 @@ async function solicitarApi(metodo, datos) {
     }
 
     const respuesta = await fetch("../Modelos/gestionarActividades.php", opciones);
-    const resultado = await respuesta.json();
+    const texto = await respuesta.text();
+    let resultado;
+    try {
+        resultado = JSON.parse(texto);
+    } catch (error) {
+        throw new Error(`El servidor devolvió una respuesta no válida (HTTP ${respuesta.status}).`);
+    }
+
     if (respuesta.status === 401) {
         window.location.href = "../Vistas/login.html";
-        return;
+        throw new Error(resultado.message || "Inicia sesión para continuar.");
     }
-    if (!respuesta.ok) {
+    if (!respuesta.ok || resultado.success !== true) {
         throw new Error(resultado.message || resultado.mensaje || "Error en la solicitud");
     }
 
@@ -120,11 +127,11 @@ function configurarAcciones(){
             return;
         }
         const botonNueva=document.getElementById("nuevaActividad");
-        const escabezadoAcciones=document.getElementById("encabezadoAcciones");
+        const encabezadoAcciones=document.getElementById("encabezadoAcciones");
 
         if(esAdministrador){
             botonNueva.classList.remove("d-none");
-            escabezadoAcciones.classList.remove("d-none");
+            encabezadoAcciones.classList.remove("d-none");
             accionesConfiguradas=true;
             return;
         }
@@ -136,7 +143,7 @@ function abrirEdicion(actividad){
     document.getElementById("nombreActividad").value=actividad.nombreActividad;
     document.getElementById("fechaEvento").value=actividad.fechaEvento;
     document.getElementById("municipio").value=actividad.municipio;
-    document.getElementById("totalRecaudado").value=actividad.totalRecaudado ?? "";
+    document.getElementById("totalRecaudado").value=Number(actividad.totalRecaudado);
 
     //Para cuando se usa el modal en html
     document.getElementById("campoTotalRecaudado").classList.remove("d-none");
@@ -158,7 +165,7 @@ formularioActividad.addEventListener("submit", async(evento)=>{
     if(idActividad){
         datos.idActividad = Number(idActividad);
         const total = document.getElementById("totalRecaudado").value;
-        datos.totalRecaudado = total=== "" ?null : Number (total);
+        datos.totalRecaudado = total === "" ? 0 : Number(total);
     }
 
     try{

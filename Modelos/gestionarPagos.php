@@ -6,9 +6,9 @@ header("Content-Type: application/json;charset=UTF-8");
 
 function leerDatos() {
     $datos = json_decode(file_get_contents("php://input"), true);
-    if(json_last_error() !== JSON_ERROR_NONE) {
+    if(json_last_error() !== JSON_ERROR_NONE || !is_array($datos)) {
         http_response_code(400);
-        throw new Exception("Error al decodificar JSON: " . json_last_error_msg());
+        throw new Exception("Envía los datos del pago en formato JSON válido.");
     }
     return $datos;
 }
@@ -21,7 +21,7 @@ function validarPago($datos){
 
     $idPrestamoValido = filter_var($idPrestamo, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
 
-    if(!is_numeric($valorCuota) || float $valorCuota <= 0 || !is_string($fechaPago) || trim($fechaPago) === "" || $idPrestamoValido === false) {
+    if(!is_numeric($valorCuota) || (float)$valorCuota <= 0 || !is_string($fechaPago) || trim($fechaPago) === "" || $idPrestamoValido === false) {
         http_response_code(400);
         throw new Exception("Ingresa un valor de cuota, fecha de pago y préstamo válidos");
     }
@@ -48,7 +48,7 @@ try{
     }
 
     $metodo = $_SERVER["REQUEST_METHOD"];
-    if (!IN_ARRAY($metodo, ["GET", "POST", "PUT", "DELETE"],true)){
+    if (!in_array($metodo, ["GET", "POST", "PUT", "DELETE"],true)){
         http_response_code(405);
         throw new Exception("Metodo HTTP no permitido");
     }
@@ -59,6 +59,7 @@ try{
     }
 
     require_once __DIR__ . "/pagos.php";
+    require_once __DIR__ . "/prestamos.php";
     $pagoCuota = new PagoCuota();
 
     switch($metodo){
@@ -66,13 +67,17 @@ try{
             $resultado = [
                 "success" => true,
                 "rol" => $_SESSION["rol"],
-                "pagos" => $pagoCuota->obtenerPagos()
+                "pagos" => $pagoCuota->obtenerPagos(),
+                "prestamos" => (new Prestamo())->obtenerPrestamos()
             ];
             http_response_code(200);
             break;
         case "POST":
             $datos = validarPago(leerDatos());
-            $pagoCuota->guardar($datos);
+            if(!$pagoCuota->guardar($datos)){
+                http_response_code(500);
+                throw new Exception("No fue posible guardar el pago.");
+            }
             $resultado = [
                 "success" => true,
                 "message" => "Pago registrado exitosamente"

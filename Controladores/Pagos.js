@@ -1,6 +1,7 @@
 const listaPagos =  document.getElementById("listaPagos");
 let esAdministrador = false;
 let pagos =[];
+let prestamos = [];
 let accionesConfiguradas = false;
 const formularioPago = document.getElementById("formPagos");
 const modalPago = new bootstrap.Modal(document.getElementById("modalPagos"),
@@ -10,8 +11,7 @@ const modalPago = new bootstrap.Modal(document.getElementById("modalPagos"),
 async function solicitarApi(metodo, datos) {
     const opciones = {
         method: metodo,
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(datos)
+        headers: {'Content-Type': 'application/json'}
     }
 
     if (datos){
@@ -19,11 +19,19 @@ async function solicitarApi(metodo, datos) {
     }
 
     const respuesta = await fetch ("../Modelos/gestionarPagos.php", opciones);
-    const resultado = await respuesta.json();
+    const texto = await respuesta.text();
+    let resultado;
+    try {
+        resultado = JSON.parse(texto);
+    } catch (error) {
+        throw new Error(`El servidor devolvió una respuesta no válida (HTTP ${respuesta.status}).`);
+    }
+
     if(respuesta.status === 401){
         window.location.href = "../Vistas/login.html";
+        throw new Error(resultado.message || resultado.mensaje || "Inicia sesión para continuar.");
     }
-    if(!respuesta.ok){
+    if(!respuesta.ok || resultado.success !== true){
         throw new Error (resultado.message || resultado.mensaje || "Error de la solicitud");
     }
     return resultado;
@@ -33,8 +41,15 @@ async function cargarPagos(){
     try{
         const resultado = await solicitarApi("GET");
         esAdministrador = resultado.rol === "admin";
-        configurarAcciones();
         pagos = resultado.pagos;
+        prestamos = resultado.prestamos;
+        if(!Array.isArray(pagos)){
+            throw new Error("No se pudieron cargar los pagos.");
+        }
+        if(!Array.isArray(prestamos)){
+            throw new Error("No se pudieron cargar los préstamos disponibles.");
+        }
+        configurarAcciones();
         mostrarPagos();
 
     }catch (error){
@@ -45,7 +60,7 @@ async function cargarPagos(){
         if (pagos.length == 0){
             const fila = document.createElement("tr");
             const celda = document.createElement("td");
-            celda.colSpan = esAdministrador ? 5 : 4;
+            celda.colSpan = esAdministrador ? 3 : 2;
             celda.className = "text-center py-4 text-muted";
             celda.textContent = "No hay pagos registrados";
             fila.append(celda);
@@ -94,7 +109,7 @@ async function cargarPagos(){
 }
 
 async function eliminarPago(pago){
-    const confirmar = window.confirm(`¿Deseas eliminar el pago del préstamo #${pago.idPago}?`);
+    const confirmar = window.confirm(`¿Deseas eliminar el pago del préstamo #${pago.idPrestamo}?`);
 
     if(!confirmar){
         return 
@@ -121,20 +136,48 @@ function configurarAcciones(){
         if(encabezadoAcciones) encabezadoAcciones.classList.remove("d-none");
         if(botonNuevo) {
             botonNuevo.addEventListener("click", () => {
+                if(prestamos.length === 0){
+                    alert("No hay préstamos disponibles para registrar un pago.");
+                    return;
+                }
                 formularioPago.reset();
-                document.getElementById("idPrestamo").value = "1";
+                document.getElementById("idPago").value = "";
+                cargarOpcionesPrestamos();
                 document.getElementById("tituloModalPagos").textContent = "Nuevo Pago";
                 document.getElementById("guardarPago").textContent = "Guardar";
+                modalPago.show();
             });
         }
         accionesConfiguradas = true;
     }
 }
 
+function cargarOpcionesPrestamos(idSeleccionado = ""){
+    const selectorPrestamo = document.getElementById("idPrestamo");
+    selectorPrestamo.replaceChildren();
+
+    const opcionInicial = document.createElement("option");
+    opcionInicial.value = "";
+    opcionInicial.textContent = "Selecciona un préstamo";
+    selectorPrestamo.append(opcionInicial);
+
+    prestamos.forEach((prestamo) => {
+        const opcion = document.createElement("option");
+        opcion.value = String(prestamo.idPrestamo);
+        opcion.textContent = `Préstamo #${prestamo.idPrestamo} - Asociado #${prestamo.idAsociado} - ${Number(prestamo.valorPrestamo).toLocaleString("es-CO", {
+            style: "currency",
+            currency: "COP"
+        })}`;
+        selectorPrestamo.append(opcion);
+    });
+
+    selectorPrestamo.value = String(idSeleccionado);
+}
+
 function abrirEdicion(pago){
     formularioPago.reset();
     document.getElementById("idPago").value = pago.idPago;
-    document.getElementById("idPrestamo").value = pago.idPrestamo;
+    cargarOpcionesPrestamos(pago.idPrestamo);
     document.getElementById("valorCuota").value = pago.valorCuota;
     document.getElementById("fechaPago").value = pago.fechaPago;
 
@@ -161,8 +204,8 @@ formularioPago.addEventListener("submit", async (evento)=>{
     try{
         await solicitarApi(idPago ? "PUT" : "POST", datos);
         modalPago.hide();
-        alert("Pago actualizado correctamente");
-        cargarPagos();
+        await cargarPagos();
+        alert(idPago ? "Pago actualizado correctamente" : "Pago registrado correctamente");
     }catch(error){
         alert(error.message);
     }
