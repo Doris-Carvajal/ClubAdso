@@ -5,17 +5,19 @@ let accionesConfiguradas = false;
 const formularioActividad = document.getElementById("formActividad");
 const modalActividad = new bootstrap.Modal(document.getElementById("modalActividad"),
 );
+//Permite controlar una ventana modal de bootstrap, busca el modal en el HTML, 
+//guarda el ojeto que permite mostrarlo u ocultarlo.
 
 
-async function solicitarApi(metodo, datos) {
+async function solicitarApi(metodo, datos) {// Se encarga de ser asincrona, recibe el tipo de solicitud HTTP, recibe la informacion que se enviara al servidor.
     const opciones = {
-        method: metodo,
+        method: metodo, 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datos)
     }
 
-    if (datos){
-        opciones.body = JSON.stringify(datos);
+    if (datos){// Comprueba si la variable datos contiene informacion
+        opciones.body = JSON.stringify(datos); 
     }
 
     const respuesta = await fetch("../Modelos/gestionarActividades.php", opciones);
@@ -27,15 +29,19 @@ async function solicitarApi(metodo, datos) {
         throw new Error(`El servidor devolvió una respuesta no válida (HTTP ${respuesta.status}).`);
     }
 
-    if (respuesta.status === 401) {
+    if (respuesta.status === 401) {// comprueba si el servidor devolvió si la solicitud no esta autenticada.
         window.location.href = "../Vistas/login.html";
         throw new Error(resultado.message || "Inicia sesión para continuar.");
+        //El operador || seginifica que se utiliza el valor de la izquierda si existe, de lo contrario, se utiliza el de la derecha.
     }
     if (!respuesta.ok || resultado.success !== true) {
         throw new Error(resultado.message || resultado.mensaje || "Error en la solicitud");
     }
 
-    return resultado;
+    return resultado; 
+
+    //solicitarApi esta funcion es la encargada de enviar solicitudes al servidor,
+    //recibir respuestas,convertirlas a JSON y controlar los errores
 }
 //Carga la actividad
 async function cargarActividades() {
@@ -49,6 +55,9 @@ async function cargarActividades() {
         alert("Error al cargar las actividades: " + error.message);
     }
 }
+
+// Es la funcon encargada de mostrar las actividades y las acciones,
+//dependiendo del rol , en este caso admin
 
 function mostrarActividades() {
     listaActividades.replaceChildren();

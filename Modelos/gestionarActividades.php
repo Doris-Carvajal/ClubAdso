@@ -125,6 +125,7 @@ try{
         case "PUT":
             $datos["idActividad"]=validarId($datos["idActividad"] ?? null);
             $datos = array_merge($datos,validarActividad($datos));
+            //Valida y limpia los datos(quita espacios) y los guarda de nuevo en $datos, conservando los otros campos como ID y el estado
             $datos["totalRecaudado"] = validarTotalRecaudado($datos["totalRecaudado"] ?? null);
             $datos["estado"] = validarEstadoActividad($datos["estado"] ?? null);
             
@@ -178,6 +179,12 @@ try{
         "success" => false,
         "message" => $e->getMessage()
     ]);
+   
+
+//- `catch (DomainException $e)`: captura el error; `$e` contiene sus detalles.
+//- `http_response_code($e->getCode() ?: 400)`: responde con el código HTTP del error, por ejemplo `404` o `409`. Si el error no tiene código, usa `400`.
+//- `json_encode([...])`: convierte la respuesta a JSON. `"success" => false` indica que la operación falló y `"message"` incluye el motivo del error.
+//- `echo`: envía ese JSON al navegador para que la página pueda mostrar el mensaje.
 }catch (Exception $e) {
     echo json_encode([
         "success" => false,
