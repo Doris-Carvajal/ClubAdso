@@ -53,7 +53,7 @@ try{
         throw new Exception("Metodo HTTP no permitido");
     }
 
-    if($metodo !== "GET" && $_SESSION["rol"] !== "admin"){
+    if(!in_array($metodo, ["GET", "POST"], true) && $_SESSION["rol"] !== "admin"){
         http_response_code(403);
         throw new Exception("No tienes permisos para realizar esta acción");
     }
@@ -61,20 +61,22 @@ try{
     require_once __DIR__ . "/pagos.php";
     require_once __DIR__ . "/prestamos.php";
     $pagoCuota = new PagoCuota();
+    $esAdministrador = $_SESSION["rol"] === "admin";
+    $documentoAsociado = $esAdministrador ? null : $_SESSION["documento"];
 
     switch($metodo){
         case "GET":
             $resultado = [
                 "success" => true,
                 "rol" => $_SESSION["rol"],
-                "pagos" => $pagoCuota->obtenerPagos(),
-                "prestamos" => (new Prestamo())->obtenerPrestamos()
+                "pagos" => $pagoCuota->obtenerPagos($documentoAsociado),
+                "prestamos" => (new Prestamo())->obtenerPrestamos($documentoAsociado)
             ];
             http_response_code(200);
             break;
         case "POST":
             $datos = validarPago(leerDatos());
-            if(!$pagoCuota->guardar($datos)){
+            if(!$pagoCuota->guardar($datos, $documentoAsociado)){
                 http_response_code(500);
                 throw new Exception("No fue posible guardar el pago.");
             }
@@ -123,6 +125,12 @@ try{
         "success" => false,
         "message" => "Error en la base de datos: " . $e->getMessage()
 
+    ]);
+}catch(DomainException $e){
+    http_response_code($e->getCode() ?: 400);
+    echo json_encode([
+        "success" => false,
+        "message" => $e->getMessage()
     ]);
 }catch (Exception $e) {
     echo json_encode([

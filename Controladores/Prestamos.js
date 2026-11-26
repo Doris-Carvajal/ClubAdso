@@ -39,6 +39,9 @@ async function cargarPrestamos() {
     try{
         const  resultado = await solicitarApi ("GET");
         esAdministrador =resultado.rol === "admin";
+        if (esAdministrador) {
+            mostrarAsociados(resultado.asociados);
+        }
         configurarAcciones();
         prestamos = resultado.prestamos;
         mostrarPrestamos();
@@ -103,6 +106,29 @@ async function cargarPrestamos() {
     }
 }
 
+function mostrarAsociados(asociados) {
+    if (!Array.isArray(asociados)) {
+        throw new Error("No se pudo cargar la lista de asociados.");
+    }
+
+    const selector = document.getElementById("idAsociado");
+    selector.replaceChildren();
+
+    const opcionInicial = document.createElement("option");
+    opcionInicial.value = "";
+    opcionInicial.textContent = asociados.length
+        ? "Selecciona un asociado"
+        : "No hay asociados registrados";
+    selector.append(opcionInicial);
+
+    asociados.forEach((asociado) => {
+        const opcion = document.createElement("option");
+        opcion.value = asociado.idAsociado;
+        opcion.textContent = `${asociado.nombres} ${asociado.apellidos} (${asociado.documento})`;
+        selector.append(opcion);
+    });
+}
+
 async function eliminarPrestamo(prestamo){
     const confirmar = window.confirm(`¿Desea eliminar el prestamo "${prestamo.valorPrestamo}"?`)
 
@@ -132,6 +158,7 @@ function configurarAcciones(){
         botonNueva.addEventListener("click", () => {
             formularioPrestamo.reset();
             document.getElementById("idPrestamo").value = "";
+            document.getElementById("idAsociado").disabled = false;
             document.getElementById("tituloModalPrestamos").textContent = "Nuevo préstamo";
             document.getElementById("guardarPrestamo").textContent = "Guardar";
         });
@@ -147,6 +174,8 @@ function abrirEdicion(prestamo){
     document.getElementById("tasaInteres").value=prestamo.tasaInteres;
     document.getElementById("fechaPrestamo").value=prestamo.fechaPrestamo;
     document.getElementById("numeroCuotas").value=prestamo.numeroCuotas ?? "";
+    document.getElementById("idAsociado").value=prestamo.idAsociado;
+    document.getElementById("idAsociado").disabled=true;
 
 
     document.getElementById("tituloModalPrestamos").textContent="Editar prestamos";
@@ -159,7 +188,7 @@ formularioPrestamo.addEventListener("submit", async(evento)=>{
     const idPrestamo=document.getElementById("idPrestamo").value;
 
     const datos ={
-        idAsociado: Number(document.getElementById("idAsociado").value) || 1,
+        idAsociado: Number(document.getElementById("idAsociado").value),
         valorPrestamo: Number (document.getElementById("valorPrestamo").value),
         tasaInteres: Number (document.getElementById("tasaInteres").value),
         fechaPrestamo:document.getElementById("fechaPrestamo").value,

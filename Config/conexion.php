@@ -3,7 +3,7 @@
 class Conexion
 {
     private $host ="localhost";
-    private $baseDatos="mrclub_doriscarvajal";
+    private $baseDatos="mrclub_doriscarajal";
     private $user= "root";
     private $contraseña="";
 

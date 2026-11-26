@@ -2,7 +2,7 @@
 
 session_start();
 
-header("Content-Type: application/json ;charset=UFT-8");
+header("Content-Type: application/json; charset=utf-8");
 
 function leerDatos() {
     $datos = json_decode(file_get_contents("php://input"), true);
@@ -41,6 +41,14 @@ function validarTotalRecaudado($total){
     return (float)$total;
 }
 
+function validarEstadoActividad($estado){
+    if (!in_array($estado, ["En curso", "Finalizada"], true)) {
+        http_response_code(400);
+        throw new Exception("Selecciona un estado válido para la actividad.");
+    }
+    return $estado;
+}
+
 
 function validarId($id){
     $idActividad=filter_var($id,FILTER_VALIDATE_INT,["options" =>["min_range" => 1]]);
@@ -58,12 +66,23 @@ try{
     }
 
     $metodo = $_SERVER["REQUEST_METHOD"];
-    if (!IN_ARRAY($metodo, ["GET", "POST", "PUT", "DELETE"],true)){
+    if (!in_array($metodo, ["GET", "POST", "PUT", "DELETE"], true)){
         http_response_code(405);
         throw new Exception("Metodo HTTP no permitido");
     }
 
-    if($metodo !== "GET" && $_SESSION["rol"] !== "admin"){
+    $datos = in_array($metodo, ["POST", "PUT", "DELETE"], true) ? leerDatos() : [];
+    $esAdministrador = $_SESSION["rol"] === "admin";
+    $accionParticipacion = (
+        $metodo === "POST" && ($datos["accion"] ?? null) === "participar"
+    ) || (
+        $metodo === "DELETE" && ($datos["accion"] ?? null) === "retirarse"
+    );
+
+    if (
+        (!$esAdministrador && $metodo !== "GET" && !$accionParticipacion) ||
+        ($esAdministrador && $accionParticipacion)
+    ) {
         http_response_code(403);
         throw new Exception("No tienes permisos para realizar esta acción");
     }
@@ -76,12 +95,25 @@ try{
             $resultado= [
                 "success" => true,
                 "rol" => $_SESSION["rol"],
-                "actividades" => $actividad->obteneractividades()
+                "actividades" => $actividad->obtenerActividades(
+                    $esAdministrador ? null : $_SESSION["documento"]
+                )
             ];
             http_response_code(200);
             break;
         case "POST":
-            $datos = validarActividad(leerDatos());
+            if (($datos["accion"] ?? null) === "participar") {
+                $idActividad = validarId($datos["idActividad"] ?? null);
+                $actividad->inscribir($idActividad, $_SESSION["documento"]);
+                $resultado = [
+                    "success" => true,
+                    "message" => "Te inscribiste en la actividad."
+                ];
+                http_response_code(201);
+                break;
+            }
+
+            $datos = validarActividad($datos);
             $datos["totalRecaudado"] = 0;
             $actividad->guardar($datos);
             $resultado = [
@@ -91,10 +123,10 @@ try{
             http_response_code(201);
             break;
         case "PUT":
-            $datos=leerDatos();
             $datos["idActividad"]=validarId($datos["idActividad"] ?? null);
             $datos = array_merge($datos,validarActividad($datos));
             $datos["totalRecaudado"] = validarTotalRecaudado($datos["totalRecaudado"] ?? null);
+            $datos["estado"] = validarEstadoActividad($datos["estado"] ?? null);
             
             if(!$actividad->editar($datos)){
                 http_response_code(404);
@@ -107,9 +139,18 @@ try{
             http_response_code(200);
             break;
         case "DELETE":
-            $datos=leerDatos();
             $idActividad = validarId($datos["idActividad"] ?? null);
-            
+
+            if (($datos["accion"] ?? null) === "retirarse") {
+                $actividad->retirar($idActividad, $_SESSION["documento"]);
+                $resultado = [
+                    "success" => true,
+                    "message" => "Te retiraste de la actividad."
+                ];
+                http_response_code(200);
+                break;
+            }
+
             if(!$actividad->eliminar($idActividad)){
                 http_response_code(404);
                 throw new Exception("No se escontró la actividad");
@@ -130,6 +171,12 @@ try{
         "success" => false,
         "message" => "Error en la base de datos: " . $e->getMessage()
 
+    ]);
+}catch(DomainException $e) {
+    http_response_code($e->getCode() ?: 400);
+    echo json_encode([
+        "success" => false,
+        "message" => $e->getMessage()
     ]);
 }catch (Exception $e) {
     echo json_encode([

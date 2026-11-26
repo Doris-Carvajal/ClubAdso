@@ -103,7 +103,7 @@
 
 <body>
     <header class="header-mr d-flex justify-content-between align-items-center gap-3">
-        <h1 class="h3 mb-0">Gestión de pagos del club</h1>
+        <h1 id="tituloPagina" class="h3 mb-0">Gestión de pagos del club</h1>
         <a class="btn btn-outline-dark" href="../Vistas/dashboard.html">
             <i class="bi bi-arrow-left"></i>
             Volver al panel
@@ -114,7 +114,7 @@
         <div class="contenedor-pagos">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
                 <p class="mb-0 text-dark">
-                    Consulta los pagos y su información.
+                    Registra y consulta los pagos de los préstamos.
                 </p>
                 <button id="nuevaPago" class="btn btn-success d-none" type="button">
                     <i class="bi bi-plus-lg"></i>
@@ -122,13 +122,17 @@
                 </button>
             </div>
 
+            <h2 id="tituloHistorial" class="h4">Historial de pagos</h2>
             <div class="card shadow-sm">
                 <div class="table-responsive">
                     <table class="table table-striped table-hover align-middle mb-0 tabla-rosa">
                         <thead>
                             <tr>
-                                <th scope="col">Valor de Cuota</th>
-                                <th scope="col">Fecha de Pago</th>
+                                <th scope="col">Préstamo</th>
+                                <th scope="col">Cuotas pagadas / total</th>
+                                <th scope="col">Valor del préstamo</th>
+                                <th id="encabezadoValorPago" scope="col">Valor de cuota</th>
+                                <th id="encabezadoFechaPago" scope="col">Fecha de Pago</th>
                                 <th id="encabezadoAcciones" class="d-none" scope="col">
                                     Acciones
                                 </th>
@@ -136,7 +140,7 @@
                         </thead>
                         <tbody id="listaPagos">
                             <tr>
-                                <td colspan="5" class="text-center py-4">
+                                <td colspan="6" class="text-center py-4">
                                     Cargando pagos...
                                 </td>
                             </tr>

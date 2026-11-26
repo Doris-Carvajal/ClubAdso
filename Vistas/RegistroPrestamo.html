@@ -182,8 +182,12 @@
                             <label for="numeroCuotas" class="form-label fw-bold">Numero de Cuotas:</label>
                             <input type="number" class="form-control" id="numeroCuotas" name="numeroCuotas" min="1" step="1" required />
                         </div>
-                        <input type="hidden" id="idAsociado" name="idAsociado" value="1" />
-                        <input type="hidden" id="idAsociado" name="idAsociado" value="1" />
+                        <div class="mb-3">
+                            <label for="idAsociado" class="form-label fw-bold">Asociado:</label>
+                            <select class="form-select" id="idAsociado" name="idAsociado" required>
+                                <option value="">Selecciona un asociado</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="modal-footer">

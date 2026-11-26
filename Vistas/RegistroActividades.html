@@ -115,7 +115,7 @@
     <main class="container py-4">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
             <p class="mb-0 text-muted">
-                Consulta las actividades programadas y su información.
+                Consulta las actividades, inscríbete voluntariamente y revisa el reparto al finalizar.
             </p>
             <button id="nuevaActividad" class="btn btn-success d-none" type="button"
                 data-bs-toggle="modal" data-bs-target="#modalActividad">
@@ -133,14 +133,16 @@
                             <th scope="col">Fecha</th>
                             <th scope="col">Municipio</th>
                             <th scope="col">Total recaudado</th>
-                            <th id="encabezadoAcciones" class="d-none" scope="col">
-                                Acciones
-                            </th>
+                            <th scope="col">Recaudo asociados (50%)</th>
+                            <th scope="col">Recaudo club (50%)</th>
+                            <th scope="col">Participantes</th>
+                            <th scope="col">Estado</th>
+                            <th id="encabezadoAcciones" scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="listaActividades">
                         <tr>
-                            <td colspan="5" class="text-center py-4">
+                            <td colspan="9" class="text-center py-4">
                                 Cargando actividades...
                             </td>
                         </tr>
@@ -176,6 +178,15 @@
                     <div class="mb-3">
                         <label for="municipio" class="form-label">Municipio:</label>
                         <input type="text" class="form-control" id="municipio" name="municipio" required />
+                    </div>
+
+                    <div id="campoEstadoActividad" class="mb-3 d-none">
+                        <label for="estadoActividad" class="form-label">Estado de la actividad:</label>
+                        <select class="form-select" id="estadoActividad" name="estado">
+                            <option value="En curso">En curso</option>
+                            <option value="Finalizada">Finalizada</option>
+                        </select>
+                        <div class="form-text">Al finalizar, el reparto del recaudo queda definido.</div>
                     </div>
 
                     <div id="campoTotalRecaudado" class="mb-3 d-none">

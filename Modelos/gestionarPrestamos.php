@@ -18,7 +18,7 @@ function validarPrestamos($datos){
     $interes = $datos['tasaInteres'] ?? null;
     $cuotas = $datos['numeroCuotas'] ?? null;
     $fecha = $datos['fechaPrestamo'] ?? null;
-    $idAsociado = filter_var($datos['idAsociado'] ?? 1, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
+    $idAsociado = filter_var($datos['idAsociado'] ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
 
     if(
         !is_numeric($valor) || (float)$valor <= 0 ||
@@ -28,7 +28,7 @@ function validarPrestamos($datos){
         $idAsociado === false
     ){
         http_response_code(400);
-        throw new Exception("Ingresa un valor de préstamo, tasa de interés, número de cuotas y fecha válidos");
+        throw new Exception("Ingresa los datos válidos del préstamo y selecciona un asociado.");
     }
     return [
         "valorPrestamo" => (float)$valor,
@@ -69,10 +69,12 @@ try{
 
     switch($metodo){
         case "GET":
+            $documentoAsociado = $_SESSION["rol"] === "admin" ? null : $_SESSION["documento"];
             $resultado =[
                 "success" => true,
                 "rol" => $_SESSION["rol"],
-                "prestamos" => $prestamo->obtenerPrestamos()
+                "prestamos" => $prestamo->obtenerPrestamos($documentoAsociado),
+                "asociados" => $_SESSION["rol"] === "admin" ? $prestamo->obtenerAsociados() : []
             ];
             http_response_code(200);
             break;
@@ -121,6 +123,12 @@ try{
     echo json_encode([
         "success" => false,
         "message" => "Error en la base de datos: " . $e->getMessage()
+    ]);
+}catch(DomainException $e){
+    http_response_code($e->getCode() ?: 400);
+    echo json_encode([
+        "success" => false,
+        "message" => $e->getMessage()
     ]);
 }catch(Exception $e){
     echo json_encode([
